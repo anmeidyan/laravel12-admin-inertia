@@ -70,10 +70,10 @@
                                         class="btn btn-info lfm-image">
                                         <i class="fas fa-image"></i>
                                     </a>
-                                    <input type="hidden" id="image_1" class="form-control" name="image_path" value="{{ config('app.url').$slideshow->image_path }}">
+                                    <input type="hidden" id="image_1" class="form-control" name="image_path" value="{{ $slideshow->image_path }}">
                                     <div id="preview_image_1" class="preview-image">
                                         @if($slideshow->image_path)
-                                            <img src="{{ config('app.url').$slideshow->image_path }}" alt="Preview">
+                                            <img src="{{ $slideshow->image_path }}" alt="Preview">
                                         @endif
                                     </div>
                                     @error('image_path')

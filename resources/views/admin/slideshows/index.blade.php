@@ -55,8 +55,8 @@
                                             <td>{{ $slideshow->description }}</td>
                                             <td>
                                                 @if($slideshow->image_path)
-                                                <a href="{{ config('app.url').$slideshow->image_path }}" target="_blank">
-                                                    <img src="{{ config('app.url').$slideshow->image_path }}" alt="Image" class="img-fluid" width="100">
+                                                <a href="{{ $slideshow->image_path }}" target="_blank">
+                                                    <img src="{{ $slideshow->image_path }}" alt="Image" class="img-fluid" width="100">
                                                 </a>
                                                 @endif
                                             </td>
