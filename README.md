@@ -15,12 +15,13 @@
 - Service Providers (Dependency Injection)
 - Logging (Admin Activity, Webhook slack for critical error)
 - Filemanager (UniSharp + permission/role)
+- Inertiajs
 
 ## Getting Started
 
 - Clone this repository
 ```bash
-git clone https://github.com/anmeidyan/laravel12-admin-panel.git
+git clone https://github.com/anmeidyan/laravel12-admin-inertia.git
 ```
 
 - Rename .env.example to .env
@@ -44,4 +45,8 @@ php artisan migrate --seed
 - Run
 ```bash
 php artisan serve
+```
+```bash
+composer require inertiajs/inertia-laravel
+npm install react react-dom @vitejs/plugin-react
 ```

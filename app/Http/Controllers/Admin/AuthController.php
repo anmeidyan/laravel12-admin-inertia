@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Services\Interfaces\AuthServiceInterface;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AuthController extends Controller
 {   
@@ -34,8 +35,8 @@ class AuthController extends Controller
         if(auth()->check()){
             return redirect()->route('admin.dashboard');
         }
-        
-        return view('admin.auth.login');
+
+        return Inertia::render('Auth/Login');
     }
 
     public function loginPost(Request $request){
@@ -51,7 +52,12 @@ class AuthController extends Controller
         if($auth){
             return redirect()->route('admin.dashboard');
         }else{
-            return redirect()->route('admin.login')->with('danger','Access denied!');
+            return redirect()
+                    ->route('admin.login')
+                    ->with('flash', [
+                        'type' => 'danger',
+                        'message' => 'Access denied!'
+                    ]);
         }
     }
 

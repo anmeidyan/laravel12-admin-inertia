@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => App\Http\Middleware\AdminMiddleware::class,
             'permission' => App\Http\Middleware\PermissionMiddleware::class,
         ]);
+
+        $middleware->web([
+            App\Http\Middleware\HandleInertiaRequests::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

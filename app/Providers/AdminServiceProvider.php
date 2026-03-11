@@ -8,7 +8,7 @@ use UniSharp\LaravelFilemanager\Events\FileWasDeleted;
 use UniSharp\LaravelFilemanager\Events\FileWasRenamed;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Menu;
+use App\Services\MenuService;
 
 class AdminServiceProvider extends ServiceProvider
 {
@@ -29,33 +29,17 @@ class AdminServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->viewMenu();
+        $this->viewMenu(app(MenuService::class));
         $this->permission();
         $this->filemanager();
     }
 
-    protected function viewMenu(): void
+    protected function viewMenu(MenuService $menuService): void
     {
-        \View::composer('*', function ($view) {
+        \View::composer('*', function ($view) use ($menuService) {
             if (!auth()->check()) return;
 
-            $permissionIds = auth()->user()->role->permissions->pluck('id');
-
-            $menus = Menu::with(['children' => function ($q) use ($permissionIds) {
-                        $q->whereHas('permissions', function ($q) use ($permissionIds) {
-                            $q->whereIn('permissions.id', $permissionIds);
-                        });
-                    }])
-                    ->where('is_active', 1)
-                    ->where('is_view', 1)
-                    ->whereNull('parent_id')
-                    ->WhereHas('permissions', function ($q) use ($permissionIds) {
-                        $q->whereIn('permissions.id', $permissionIds);
-                    })
-                    ->orderBy('order', 'asc')
-                    ->get();
-
-            $view->with('sideMenus', $menus);
+            $view->with('sideMenus', $menuService->getSideMenus());
         });
     }
 

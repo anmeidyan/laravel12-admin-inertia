@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('order')->default(0);
             $table->foreignId('parent_id')->nullable()->constrained('menus')->cascadeOnDelete();
             $table->string('name');
+            $table->string('url')->nullable();
             $table->string('route')->nullable();
             $table->string('icon')->nullable();
             $table->timestamps();

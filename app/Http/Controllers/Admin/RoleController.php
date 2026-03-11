@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Services\Interfaces\RoleServiceInterface;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Models\Role;
 use App\Models\Menu;
 
@@ -18,31 +19,44 @@ class RoleController extends Controller
     public function index()
     {
         if (\Gate::denies('admin.user.role.index')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
-        $data = [];
-        $data['roles'] = Role::whereNull('deleted_at')->get();
-
-        return view('admin.roles.index', $data);
+        return Inertia::render('Role/Index', [
+            'roles' => Role::whereNull('deleted_at')->get()
+        ]);
     }
 
     public function create()
     {
         if (\Gate::denies('admin.user.role.create')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
-        $data = [];
-        $data['menus'] = Menu::where('is_active', 1)->whereNull('parent_id')->get();
-
-        return view('admin.roles.create', $data);
+        return Inertia::render('Role/Create', [
+            'menus' => Menu::with(['permissions','children.permissions'])->where('is_active', 1)->whereNull('parent_id')->get()
+        ]);
     }
 
     public function store(Request $request)
     {
         if (\Gate::denies('admin.user.role.create')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
         $validated = $request->validate([
@@ -54,7 +68,12 @@ class RoleController extends Controller
 
         $this->roleService->create($validated);
 
-        return redirect()->route('admin.user.role.index')->with('success', 'Role created successfully.');
+        return redirect()
+            ->route('admin.user.role.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'Role created successfully.'
+            ]);
     }
 
     public function show(string $id)
@@ -65,20 +84,31 @@ class RoleController extends Controller
     public function edit(string $id)
     {
         if (\Gate::denies('admin.user.role.edit')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
-        $data = [];
-        $data['role'] = Role::findOrFail($id);
-        $data['menus'] = Menu::where('is_active', 1)->whereNull('parent_id')->get();
+        // dd(Role::with('permissions')->where('id',$id)->first());
 
-        return view('admin.roles.edit', $data);
+        return Inertia::render('Role/Edit', [
+            'role' => Role::with('permissions')->where('id',$id)->first(),
+            'menus' => Menu::with(['permissions','children.permissions'])->where('is_active', 1)->whereNull('parent_id')->get()
+        ]);
     }
 
     public function update(Request $request, string $id)
     {
         if (\Gate::denies('admin.user.role.edit')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
         $validated = $request->validate([
@@ -90,17 +120,32 @@ class RoleController extends Controller
 
         $this->roleService->update((int)$id, $validated);
 
-        return redirect()->route('admin.user.role.index')->with('success', 'Role updated successfully.');
+        return redirect()
+            ->route('admin.user.role.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'Role updated successfully.'
+            ]);
     }
 
     public function destroy(string $id)
     {
         if (\Gate::denies('admin.user.role.delete')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
         $this->roleService->delete((int)$id);
 
-        return redirect()->route('admin.user.role.index')->with('success', 'Role deleted successfully.');
+        return redirect()
+            ->route('admin.user.role.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'Role deleted successfully.'
+            ]);
     }
 }

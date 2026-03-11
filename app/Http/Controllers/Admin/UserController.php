@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Services\Interfaces\UserServiceInterface;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Models\Role;
 use App\Models\User;
 
@@ -18,31 +19,44 @@ class UserController extends Controller
     public function index()
     {
         if (\Gate::denies('admin.user.list.index')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
-        $data = [];
-        $data['users'] = User::whereNull('deleted_at')->get();
-
-        return view('admin.users.index', $data);
+        return Inertia::render('User/Index', [
+            'users' => User::with('role')->whereNull('deleted_at')->get(),
+        ]);
     }
 
     public function create()
     {
         if (\Gate::denies('admin.user.list.create')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
-        $data = [];
-        $data['roles'] = Role::whereNull('deleted_at')->get();
-
-        return view('admin.users.create', $data);
+        return Inertia::render('User/Create',[
+            'roles' => Role::whereNull('deleted_at')->get(),
+        ]);
     }
 
     public function store(Request $request)
     {
         if (\Gate::denies('admin.user.list.create')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
         $validated = $request->validate([
@@ -56,7 +70,12 @@ class UserController extends Controller
 
         $this->userService->create($validated);
 
-        return redirect()->route('admin.user.list.index')->with('success', 'User created successfully.');
+        return redirect()
+            ->route('admin.user.list.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'User created successfully.'
+            ]);
     }
 
     public function show(string $id)
@@ -67,20 +86,29 @@ class UserController extends Controller
     public function edit(string $id)
     {
         if (\Gate::denies('admin.user.list.edit')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
-        $data = [];
-        $data['user'] = User::findOrFail($id);
-        $data['roles'] = Role::whereNull('deleted_at')->get();
-
-        return view('admin.users.edit', $data);
+        return Inertia::render('User/Edit',[
+            'user' => User::with('role')->whereNull('deleted_at')->findOrFail($id),
+            'roles' => Role::whereNull('deleted_at')->get(),
+        ]);
     }
 
     public function update(Request $request, string $id)
     {
         if (\Gate::denies('admin.user.list.edit')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
         $validated = $request->validate([
@@ -93,17 +121,32 @@ class UserController extends Controller
 
         $this->userService->update((int)$id, $validated);
 
-        return redirect()->route('admin.user.list.index')->with('success', 'User updated successfully.');
+        return redirect()
+            ->route('admin.user.list.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'User updated successfully.'
+            ]);
     }
 
     public function destroy(string $id)
     {
         if (\Gate::denies('admin.user.list.delete')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
         $this->userService->delete((int)$id);
 
-        return redirect()->route('admin.user.list.index')->with('success', 'User deleted successfully.');
+        return redirect()
+            ->route('admin.user.list.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'User deleted successfully.'
+            ]);
     }
 }

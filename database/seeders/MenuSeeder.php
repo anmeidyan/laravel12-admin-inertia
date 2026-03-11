@@ -19,6 +19,7 @@ class MenuSeeder extends Seeder
             'order' => 2,
             'parent_id' => null,
             'name' => 'User Management',
+            'url' => null,
             'route' => 'admin.user.*',
             'icon' => 'fa-user',
         ]);
@@ -29,6 +30,7 @@ class MenuSeeder extends Seeder
             'order' => 1,
             'parent_id' => 1,
             'name' => 'List',
+            'url' => '/admin-panel/user',
             'route' => 'admin.user.list.index',
             'icon' => null,
         ]);
@@ -39,6 +41,7 @@ class MenuSeeder extends Seeder
             'order' => 2,
             'parent_id' => 1,
             'name' => 'Role',
+            'url' => '/admin-panel/role',
             'route' => 'admin.user.role.index',
             'icon' => null,
         ]);
@@ -49,6 +52,7 @@ class MenuSeeder extends Seeder
             'order' => 1,
             'parent_id' => null,
             'name' => 'Slideshow',
+            'url' => '/admin-panel/slideshow',
             'route' => 'admin.slideshow.index',
             'icon' => 'fa-images',
         ]);
@@ -59,6 +63,7 @@ class MenuSeeder extends Seeder
             'order' => 99,
             'parent_id' => null,
             'name' => 'No View Menus',
+            'url' => null,
             'route' => 'admin.user.*',
             'icon' => null,
         ]);

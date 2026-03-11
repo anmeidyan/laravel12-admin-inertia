@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->boolean('is_active')->default(true);
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->timestamp('created_at')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamp('updated_at')->nullable();

@@ -20,6 +20,10 @@ class RoleService implements RoleServiceInterface
 
             $role = Role::create($data);
 
+            if (isset($data['permission_ids'])) {
+                $role->permissions()->sync($data['permission_ids']);
+            }
+
             $this->logAdmin(
                 'Admin created role',
                 LogAction::CREATE,

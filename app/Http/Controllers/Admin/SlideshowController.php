@@ -6,6 +6,7 @@ use App\Services\Interfaces\SlideshowServiceInterface;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Slideshow;
+use Inertia\Inertia;
 
 class SlideshowController extends Controller
 {
@@ -17,28 +18,42 @@ class SlideshowController extends Controller
     public function index()
     {
         if (\Gate::denies('admin.slideshow.index')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
-        $data = [];
-        $data['slideshows'] = Slideshow::whereNull('deleted_at')->get();
-
-        return view('admin.slideshows.index', $data);
+        return Inertia::render('Slideshow/Index', [
+            'slideshows' => Slideshow::whereNull('deleted_at')->get(),
+        ]);
     }
 
     public function create()
     {
         if (\Gate::denies('admin.slideshow.create')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
-        return view('admin.slideshows.create');
+        return Inertia::render('Slideshow/Create');
     }
 
     public function store(Request $request)
     {
         if (\Gate::denies('admin.slideshow.create')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
         $validated = $request->validate([
@@ -50,7 +65,12 @@ class SlideshowController extends Controller
 
         $this->slideshowService->create($validated);
 
-        return redirect()->route('admin.slideshow.index')->with('success', 'Slideshow created successfully.');
+        return redirect()
+            ->route('admin.slideshow.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'Slideshow created successfully.'
+            ]);
     }
 
     public function show(string $id)
@@ -61,19 +81,28 @@ class SlideshowController extends Controller
     public function edit(string $id)
     {
         if (\Gate::denies('admin.slideshow.edit')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
-        $data = [];
-        $data['slideshow'] = Slideshow::findOrFail($id);
-
-        return view('admin.slideshows.edit', $data);
+        return Inertia::render('Slideshow/Edit', [
+            'slideshow' => Slideshow::findOrFail($id),
+        ]);
     }
 
     public function update(Request $request, string $id)
     {
         if (\Gate::denies('admin.slideshow.edit')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
         $validated = $request->validate([
@@ -85,17 +114,32 @@ class SlideshowController extends Controller
 
         $this->slideshowService->update((int)$id, $validated);
 
-        return redirect()->route('admin.slideshow.index')->with('success', 'Slideshow updated successfully.');
+        return redirect()
+            ->route('admin.slideshow.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'Slideshow updated successfully.'
+            ]);
     }
 
     public function destroy(string $id)
     {
         if (\Gate::denies('admin.slideshow.delete')) {
-            return redirect()->route('admin.dashboard')->with('danger', 'Unauthorized access attempt.');
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Unauthorized access attempt.'
+                ]);
         }
 
         $this->slideshowService->delete((int)$id);
 
-        return redirect()->route('admin.slideshow.index')->with('success', 'Slideshow deleted successfully.');
+        return redirect()
+            ->route('admin.slideshow.index')
+            ->with('flash', [
+                'type' => 'success',
+                'message' => 'Slideshow deleted successfully.'
+            ]);
     }
 }
