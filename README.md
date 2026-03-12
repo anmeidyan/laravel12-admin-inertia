@@ -15,7 +15,7 @@
 - Service Providers (Dependency Injection)
 - Logging (Admin Activity, Webhook slack for critical error)
 - Filemanager (UniSharp + permission/role)
-- Inertiajs
+- InertiaJS
 
 ## Getting Started
 
@@ -42,11 +42,14 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
-- Run
-```bash
-php artisan serve
-```
+Install InertiaJS + React
 ```bash
 composer require inertiajs/inertia-laravel
 npm install react react-dom @vitejs/plugin-react
+```
+
+- Run
+```bash
+php artisan serve
+npm run dev
 ```
