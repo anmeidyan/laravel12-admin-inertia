@@ -42,7 +42,7 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
-Install InertiaJS + React
+- Install InertiaJS + React
 ```bash
 composer require inertiajs/inertia-laravel
 npm install react react-dom @vitejs/plugin-react
