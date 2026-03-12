@@ -58,8 +58,7 @@ return [
     'folder_categories'        => [
         'file'  => [
             'folder_name'  => 'files',
-            'startup_view' => 'grid',
-            // 'startup_view' => 'list',
+            'startup_view' => 'list',
             'max_size'     => 50000, // size in KB
             'thumb' => true,
             'thumb_width' => 80,
@@ -105,7 +104,8 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'disk'                     => 'public',
+    // 'disk'                     => 'public',
+    'disk'                     => 'r2',
 
     'temporary_url_duration'   => 30,
 

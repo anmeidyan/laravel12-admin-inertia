@@ -60,7 +60,7 @@ class SlideshowController extends Controller
             'is_active' => 'required|boolean',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image_path' => 'required|string|max:255',
+            'image_path' => 'required|string',
         ]);
 
         $this->slideshowService->create($validated);
@@ -109,7 +109,7 @@ class SlideshowController extends Controller
             'is_active' => 'required|boolean',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image_path' => 'required|string|max:255',
+            'image_path' => 'required|string',
         ]);
 
         $this->slideshowService->update((int)$id, $validated);

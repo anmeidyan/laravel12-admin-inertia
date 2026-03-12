@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('order')->default(0);
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('image_path');
+            $table->text('image_path');
             $table->timestamp('created_at')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamp('updated_at')->nullable();
